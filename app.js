@@ -74,19 +74,19 @@ app.route("/articles")
 //route targeting specific article
 
 app.route("/articles/:articleTitle")
-.get(async function (req, res) {
-    try {
-        const foundArticle = await Article.findOne({ title: req.params.articleTitle });
-        if (foundArticle) {
-            res.send(foundArticle);
-        } else {
-            res.send("No article found");
+    .get(async function (req, res) {
+        try {
+            const foundArticle = await Article.findOne({ title: req.params.articleTitle });
+            if (foundArticle) {
+                res.send(foundArticle);
+            } else {
+                res.send("No article found");
+            }
         }
-    }
-    catch (error) {
-        console.log(error);
-    }
-})
+        catch (error) {
+            console.log(error);
+        }
+    });
 
 
 
