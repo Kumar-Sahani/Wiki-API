@@ -33,42 +33,42 @@ const Article = mongoose.model("Article", articleSchema);
 //route targeting all articles 
 
 app.route("/articles")
-.get(async function (req, res) {
-    try {
-        Article.find({}).then(function (foundArticles) {
-            res.send(foundArticles);
-        });
-    }
-    catch (error) {
-        console.log(error);
-    }
+    .get(async function (req, res) {
+        try {
+            Article.find({}).then(function (foundArticles) {
+                res.send(foundArticles);
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
 
-})
+    })
 
-.post(async function (req, res) {
-    try {
-        const newArticle = new Article({
-            title: req.body.title,
-            content: req.body.content
-        });
+    .post(async function (req, res) {
+        try {
+            const newArticle = new Article({
+                title: req.body.title,
+                content: req.body.content
+            });
 
-        await newArticle.save();
-        res.send("Successfully added a new article.");
+            await newArticle.save();
+            res.send("Successfully added a new article.");
 
-    } catch (error) {
-        res.send(error);
-    }
-})
+        } catch (error) {
+            res.send(error);
+        }
+    })
 
-.delete(async function (req, res) {
-    try {
-        await Article.deleteMany();
-        res.send("Deleted Successfully");
-    }
-    catch (error) {
-        res.send(error);
-    }
-})
+    .delete(async function (req, res) {
+        try {
+            await Article.deleteMany();
+            res.send("Deleted Successfully");
+        }
+        catch (error) {
+            res.send(error);
+        }
+    });
 
 
 //route targeting specific article
@@ -86,7 +86,44 @@ app.route("/articles/:articleTitle")
         catch (error) {
             console.log(error);
         }
-    });
+    })
+
+
+
+    .put(async function (req, res) {
+
+        try {
+            await Article.findOneAndUpdate(
+                //condition
+                { title: req.params.articleTitle },
+                //update
+                { title: req.body.title, content: req.body.content },
+                //overwrite: true
+                { overwrite: true }
+
+            )
+            res.send("updated successfully");
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+    })
+
+    .patch(async function (req, res) {
+        try {
+            await Article.findOneAndUpdate(
+                //condition
+                { title: req.params.articleTitle },
+                //flag
+                {$set: req.body}
+            )
+            res.send("updated successfully");
+        }
+        catch (error) {
+            console.log(error);
+        }
+    })
 
 
 
