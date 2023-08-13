@@ -116,9 +116,23 @@ app.route("/articles/:articleTitle")
                 //condition
                 { title: req.params.articleTitle },
                 //flag
-                {$set: req.body}
+                { $set: req.body }
             )
             res.send("updated successfully");
+        }
+        catch (error) {
+            console.log(error);
+        }
+    })
+
+    .delete(async function (req, res) {
+        try {
+            
+            await Article.deleteOne(
+                //condition
+                {title: req.params.articleTitle}
+            )
+            res.send("Deleted Successfully");
         }
         catch (error) {
             console.log(error);
