@@ -30,35 +30,22 @@ const articleSchema = {
 const Article = mongoose.model("Article", articleSchema);
 
 
-//get method for requsting all the articles
-app.get("/articles", function (req, res) {
+//route targeting all articles 
 
-    Article.find({}).then(function (foundArticles) {
-        res.send(foundArticles);
-    })
-        .catch(function (err) {
-            console.log(err);
+app.route("/articles")
+.get(async function (req, res) {
+    try {
+        Article.find({}).then(function (foundArticles) {
+            res.send(foundArticles);
         });
+    }
+    catch (error) {
+        console.log(error);
+    }
 
-});
+})
 
-//another way of writing the get methos with async function
-//app.get("/articles", async function (req, res) {
-//    try {
-//        Article.find({}).then(function (foundArticles) {
-//            res.send(foundArticles);
-//        });
-//    }
-//    catch (error) {
-//        console.log(error);
-//    }
-
-//})
-
-
-//post method for adding one article in the DB
-app.post("/articles", async function (req, res) {
-
+.post(async function (req, res) {
     try {
         const newArticle = new Article({
             title: req.body.title,
@@ -71,18 +58,36 @@ app.post("/articles", async function (req, res) {
     } catch (error) {
         res.send(error);
     }
-
-});
-
-app.deleteMany("/articles", function (req, res) {
-    Article.deleteMany(function (error) {
-        if (!error) {
-            res.send("Deleted Successfully")
-        } else {
-            res.send(error);
-        }
-    })
 })
+
+.delete(async function (req, res) {
+    try {
+        await Article.deleteMany();
+        res.send("Deleted Successfully");
+    }
+    catch (error) {
+        res.send(error);
+    }
+})
+
+
+//route targeting specific article
+
+app.route("/articles/:articleTitle")
+.get(async function (req, res) {
+    try {
+        const foundArticle = await Article.findOne({ title: req.params.articleTitle });
+        if (foundArticle) {
+            res.send(foundArticle);
+        } else {
+            res.send("No article found");
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+})
+
 
 
 app.listen(3000, function () {
