@@ -76,6 +76,7 @@ app.route("/articles")
 app.route("/articles/:articleTitle")
     .get(async function (req, res) {
         try {
+            //condition
             const foundArticle = await Article.findOne({ title: req.params.articleTitle });
             if (foundArticle) {
                 res.send(foundArticle);
